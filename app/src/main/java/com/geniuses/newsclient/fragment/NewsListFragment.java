@@ -27,10 +27,6 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 
-/**
- * Created by Sch on 2018/1/25.
- */
-
 public class NewsListFragment extends Fragment {
     private final int SUCCESS = 1;
 
