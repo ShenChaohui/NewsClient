@@ -22,9 +22,7 @@ import com.geniuses.newsclient.adapter.NewsListFragmentAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-/**
-* 主页
-*/
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private String types[] = {"头条", "新闻", "财经", "体育", "娱乐", "军事", "教育", "科技", "NBA", "股票", "星座", "女性", "健康", "育儿"};
