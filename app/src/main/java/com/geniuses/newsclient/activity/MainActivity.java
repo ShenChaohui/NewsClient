@@ -22,6 +22,9 @@ import com.geniuses.newsclient.adapter.NewsListFragmentAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+* 主页
+*/
 
 /**
  * 主页 test
