@@ -5,8 +5,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,8 +38,6 @@ public class NewsListFragment extends Fragment {
     private String types[] = {"头条", "新闻", "财经", "体育", "娱乐", "军事", "教育", "科技", "NBA", "股票", "星座", "女性", "健康", "育儿"};
     private NewsListAdapter adapter;
     private ArrayList<NewsModel> data;
-    private RecyclerView.LayoutManager mLayoutManager;
-
     private LoadingView mLoadingView;
     Handler handler = new Handler() {
         @Override
