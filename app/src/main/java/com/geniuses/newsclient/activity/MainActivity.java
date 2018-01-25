@@ -22,6 +22,9 @@ import com.geniuses.newsclient.adapter.NewsListFragmentAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+* 主页
+*/
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
