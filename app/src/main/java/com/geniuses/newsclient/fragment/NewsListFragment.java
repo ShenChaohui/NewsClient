@@ -43,7 +43,6 @@ public class NewsListFragment extends Fragment {
     private LoadingView mLoadingView;
     private RefreshLayout refreshLayout;
     private int start;
-    private boolean isLoading;
     private Callback.Cancelable getNewsPost;
     Handler handler = new Handler() {
         @Override
@@ -55,7 +54,6 @@ public class NewsListFragment extends Fragment {
                     mLoadingView.setVisibility(View.GONE);
                     refreshLayout.finishLoadmore();
                     refreshLayout.finishRefresh();
-                    isLoading = false;
                     break;
                 case ERROR:
                     Log.e(TAG, "error");
@@ -89,7 +87,6 @@ public class NewsListFragment extends Fragment {
         mListView = view.findViewById(R.id.lv_newslist);
         mListView.setAdapter(adapter);
         start = 0;
-        isLoading = false;
         getNewsData();
         mLoadingView.setVisibility(View.VISIBLE);
         refreshLayout = view.findViewById(R.id.refreshLayout);
@@ -110,7 +107,6 @@ public class NewsListFragment extends Fragment {
 
     public void getNewsData() {
         Log.e(TAG, "getNewsData");
-        isLoading = true;
         int index = getArguments().getInt("index");
         RequestParams params = new RequestParams(GlobalValue.NEWS);
         params.addParameter("channel", types[index]);
@@ -121,6 +117,9 @@ public class NewsListFragment extends Fragment {
             @Override
             public void onSuccess(String result) {
                 try {
+                    if (start == 0) {
+                        data.clear();
+                    }
                     JSONObject obj = new JSONObject(result);
                     String code = obj.getString("code");
                     if (code.equals("10000")) {
@@ -163,16 +162,13 @@ public class NewsListFragment extends Fragment {
     }
 
     private void refreshNews() {
-        data.clear();
         start = 0;
         getNewsData();
     }
 
     private void loadMoreNews() {
-        start = start + 10;
-        if(!isLoading){
-            getNewsData();
-        }
+        start = start + 20;
+        getNewsData();
     }
 
     @Override
