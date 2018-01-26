@@ -2,8 +2,6 @@ package com.geniuses.newsclient.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -11,7 +9,7 @@ import android.widget.ImageButton;
 
 import com.geniuses.newsclient.R;
 
-public class BasicActivity extends AppCompatActivity {
+public abstract class BasicActivity extends AppCompatActivity {
 
     protected String TAG;
     protected Toolbar toolbar;
@@ -54,6 +52,4 @@ public class BasicActivity extends AppCompatActivity {
     public abstract int getActivity();
     protected abstract void initView();
     protected abstract void main();
-
-}
 }
