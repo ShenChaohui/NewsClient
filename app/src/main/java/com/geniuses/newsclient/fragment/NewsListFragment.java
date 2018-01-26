@@ -16,6 +16,8 @@ import com.geniuses.newsclient.adapter.NewsListAdapter;
 import com.geniuses.newsclient.entity.NewsModel;
 import com.geniuses.newsclient.manager.GsonManager;
 import com.geniuses.newsclient.util.GlobalValue;
+import com.geniuses.newsclient.view.refreshlayout.RefreshLayout;
+import com.geniuses.newsclient.view.refreshlayout.viewholder.StickinessRefreshViewHolder;
 import com.mingle.widget.LoadingView;
 
 import org.json.JSONArray;
@@ -27,7 +29,7 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 
-public class NewsListFragment extends Fragment {
+public class NewsListFragment extends Fragment implements RefreshLayout.RefreshLayoutDelegate {
     private final int SUCCESS = 1;
 
     private ListView mListView;
@@ -35,6 +37,11 @@ public class NewsListFragment extends Fragment {
     private NewsListAdapter adapter;
     private ArrayList<NewsModel> data;
     private LoadingView mLoadingView;
+    private RefreshLayout refreshLayout;
+
+    private int start;
+    private boolean isLoading;
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -43,6 +50,9 @@ public class NewsListFragment extends Fragment {
                 case SUCCESS:
                     adapter.notifyDataSetChanged(data);
                     mLoadingView.setVisibility(View.GONE);
+                    isLoading = false;
+                    refreshLayout.endLoadingMore();
+                    refreshLayout.endRefreshing();
                     break;
             }
         }
@@ -60,25 +70,34 @@ public class NewsListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.e("Fragment"+getArguments().getInt("index"),"onCreateView");
         View view = inflater.inflate(R.layout.fragment_newslist, null);
         mLoadingView = view.findViewById(R.id.loadView);
-        mLoadingView.setVisibility(View.VISIBLE);
         data = new ArrayList<>();
         adapter = new NewsListAdapter(getActivity(), data);
         mListView = view.findViewById(R.id.lv_newslist);
         mListView.setAdapter(adapter);
-        getData();
+        //下拉刷新相关
+        refreshLayout = view.findViewById(R.id.refresh_view_newslist);
+        refreshLayout.setDelegate(this);
+        StickinessRefreshViewHolder stickinessRefreshViewHolder = new StickinessRefreshViewHolder(getActivity(),true);
+        stickinessRefreshViewHolder.setStickinessColor(R.color.colorPrimary);
+        stickinessRefreshViewHolder.setRotateImage(R.mipmap.bg_refresh_stickiness);
+        refreshLayout.setRefreshViewHolder(stickinessRefreshViewHolder);
 
+        start = 0;
+        isLoading = false;
+        getData();
+        mLoadingView.setVisibility(View.VISIBLE);
         return view;
     }
 
     public void getData() {
+        isLoading = true;
         int index = getArguments().getInt("index");
         RequestParams params = new RequestParams(GlobalValue.NEWS);
         params.addParameter("channel", types[index]);
         params.addParameter("num", 20);
-        params.addParameter("start", 0);
+        params.addParameter("start", start);
         params.addParameter("appkey", GlobalValue.APPKEY);
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
@@ -121,20 +140,18 @@ public class NewsListFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.e("Fragment"+getArguments().getInt("index"),"onCreate");
+    public void onRefreshLayoutBeginRefreshing(RefreshLayout refreshLayout) {
+        start = 0;
+        data.clear();
+        getData();
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        Log.e("Fragment"+getArguments().getInt("index"),"onPause");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.e("Fragment"+getArguments().getInt("index"),"onResume");
+    public boolean onRefreshLayoutBeginLoadingMore(RefreshLayout refreshLayout) {
+        start = start+20;
+        if(!isLoading){
+            getData();
+        }
+        return false;
     }
 }

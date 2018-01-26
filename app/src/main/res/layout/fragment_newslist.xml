@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <com.mingle.widget.LoadingView
         android:id="@+id/loadView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
-    <ListView
-        android:id="@+id/lv_newslist"
+        android:layout_height="fill_parent" />
+
+    <com.geniuses.newsclient.view.refreshlayout.RefreshLayout
+        android:id="@+id/refresh_view_newslist"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/lv_newslist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.geniuses.newsclient.view.refreshlayout.RefreshLayout>
+
 </android.support.constraint.ConstraintLayout>
