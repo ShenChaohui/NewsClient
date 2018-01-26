@@ -1,22 +1,17 @@
 package com.geniuses.newsclient.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.geniuses.newsclient.R;
 import com.geniuses.newsclient.entity.NewsModel;
-import com.geniuses.newsclient.util.ImageCache;
 import com.geniuses.newsclient.util.ImageUtils;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-
 /**
  * Created by Sch on 2017/12/1.
  */
@@ -24,7 +19,6 @@ import java.util.concurrent.ExecutionException;
 public class NewsListAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<NewsModel> data;
-    private ImageCache imageCache = new ImageCache();
 
     public NewsListAdapter(Context context, ArrayList<NewsModel> data) {
         this.context = context;
@@ -67,22 +61,7 @@ public class NewsListAdapter extends BaseAdapter {
         if (viewHolder != null) {
             viewHolder.tv_title.setText(data.get(position).getTitle());
             viewHolder.tv_date.setText(data.get(position).getTime());
-//            ImageUtils.loadNetResource(context, data.get(position).getPic(), viewHolder.iv_pic);
-            final String picUrl = data.get(position).getPic();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Bitmap bitmap = Glide.with(context).load(picUrl).asBitmap().centerCrop().into(500,500).get();
-                        imageCache.addBitmap2Cache(picUrl,bitmap);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-            viewHolder.iv_pic.setImageBitmap(imageCache.getBitmapFromCache(picUrl));
+            ImageUtils.loadNetResource(context, data.get(position).getPic(), viewHolder.iv_pic);
         }
         return convertView;
     }
