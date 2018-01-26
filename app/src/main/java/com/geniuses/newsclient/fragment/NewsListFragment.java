@@ -16,10 +16,7 @@ import com.geniuses.newsclient.adapter.NewsListAdapter;
 import com.geniuses.newsclient.entity.NewsModel;
 import com.geniuses.newsclient.manager.GsonManager;
 import com.geniuses.newsclient.util.GlobalValue;
-import com.geniuses.newsclient.view.refreshlayout.RefreshLayout;
-import com.geniuses.newsclient.view.refreshlayout.viewholder.StickinessRefreshViewHolder;
 import com.mingle.widget.LoadingView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,19 +26,20 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 
-public class NewsListFragment extends Fragment implements RefreshLayout.RefreshLayoutDelegate {
-    private final int SUCCESS = 1;
-
+public class NewsListFragment extends Fragment{
+    private final int SUCCESS = 0X01;
+    private final int ERROR = 0X02;
+    private final int CANCELLED = 0x03;
+    private  String TAG;
     private ListView mListView;
     private String types[] = {"头条", "新闻", "财经", "体育", "娱乐", "军事", "教育", "科技", "NBA", "股票", "星座", "女性", "健康", "育儿"};
     private NewsListAdapter adapter;
     private ArrayList<NewsModel> data;
     private LoadingView mLoadingView;
-    private RefreshLayout refreshLayout;
 
     private int start;
     private boolean isLoading;
-
+    private Callback.Cancelable getNewsPost;
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -51,8 +49,14 @@ public class NewsListFragment extends Fragment implements RefreshLayout.RefreshL
                     adapter.notifyDataSetChanged(data);
                     mLoadingView.setVisibility(View.GONE);
                     isLoading = false;
-                    refreshLayout.endLoadingMore();
-                    refreshLayout.endRefreshing();
+                    break;
+                case ERROR:
+                    Log.e(TAG,"error");
+                    mLoadingView.setVisibility(View.GONE);
+                    break;
+                case CANCELLED:
+                    Log.e(TAG,"cancelled");
+                    mLoadingView.setVisibility(View.GONE);
                     break;
             }
         }
@@ -71,27 +75,21 @@ public class NewsListFragment extends Fragment implements RefreshLayout.RefreshL
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_newslist, null);
+        TAG = types[getArguments().getInt("index")];
         mLoadingView = view.findViewById(R.id.loadView);
         data = new ArrayList<>();
         adapter = new NewsListAdapter(getActivity(), data);
         mListView = view.findViewById(R.id.lv_newslist);
         mListView.setAdapter(adapter);
-        //下拉刷新相关
-        refreshLayout = view.findViewById(R.id.refresh_view_newslist);
-        refreshLayout.setDelegate(this);
-        StickinessRefreshViewHolder stickinessRefreshViewHolder = new StickinessRefreshViewHolder(getActivity(),true);
-        stickinessRefreshViewHolder.setStickinessColor(R.color.colorPrimary);
-        stickinessRefreshViewHolder.setRotateImage(R.mipmap.bg_refresh_stickiness);
-        refreshLayout.setRefreshViewHolder(stickinessRefreshViewHolder);
-
         start = 0;
         isLoading = false;
-        getData();
+        getNewsData();
         mLoadingView.setVisibility(View.VISIBLE);
         return view;
     }
 
-    public void getData() {
+    public void getNewsData() {
+        Log.e(TAG,"getNewsData");
         isLoading = true;
         int index = getArguments().getInt("index");
         RequestParams params = new RequestParams(GlobalValue.NEWS);
@@ -99,7 +97,7 @@ public class NewsListFragment extends Fragment implements RefreshLayout.RefreshL
         params.addParameter("num", 20);
         params.addParameter("start", start);
         params.addParameter("appkey", GlobalValue.APPKEY);
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        getNewsPost = x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 try {
@@ -124,12 +122,17 @@ public class NewsListFragment extends Fragment implements RefreshLayout.RefreshL
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-
+                Log.e(TAG,"error:" + ex.toString());
+                Message msg = new Message();
+                msg.what = ERROR;
+                handler.sendMessage(msg);
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-
+                Message msg = new Message();
+                msg.what = CANCELLED;
+                handler.sendMessage(msg);
             }
 
             @Override
@@ -139,19 +142,19 @@ public class NewsListFragment extends Fragment implements RefreshLayout.RefreshL
         });
     }
 
-    @Override
-    public void onRefreshLayoutBeginRefreshing(RefreshLayout refreshLayout) {
-        start = 0;
+    private void refreshNews(){
         data.clear();
-        getData();
+        start = 0;
+        getNewsData();
+    }
+    private void loadMoreNews(){
+        start = start+20;
+        getNewsData();
     }
 
     @Override
-    public boolean onRefreshLayoutBeginLoadingMore(RefreshLayout refreshLayout) {
-        start = start+20;
-        if(!isLoading){
-            getData();
-        }
-        return false;
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG,"onDestroy");
     }
 }
