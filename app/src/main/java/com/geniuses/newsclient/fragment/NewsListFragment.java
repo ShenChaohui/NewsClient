@@ -1,5 +1,6 @@
 package com.geniuses.newsclient.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,9 +10,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.geniuses.newsclient.R;
+import com.geniuses.newsclient.activity.NewsDetailActivity;
 import com.geniuses.newsclient.adapter.NewsListAdapter;
 import com.geniuses.newsclient.entity.NewsModel;
 import com.geniuses.newsclient.manager.GsonManager;
@@ -84,6 +87,15 @@ public class NewsListFragment extends Fragment {
         adapter = new NewsListAdapter(getActivity(), data);
         mListView = view.findViewById(R.id.lv_newslist);
         mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+                intent.putExtra("newsModel",data.get(position));
+                startActivity(intent);
+            }
+        });
+
         start = 0;
         getNewsData();
         mLoadingView.setVisibility(View.VISIBLE);
