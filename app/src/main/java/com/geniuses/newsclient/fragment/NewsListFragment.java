@@ -17,6 +17,11 @@ import com.geniuses.newsclient.entity.NewsModel;
 import com.geniuses.newsclient.manager.GsonManager;
 import com.geniuses.newsclient.util.GlobalValue;
 import com.mingle.widget.LoadingView;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,17 +31,17 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 
-public class NewsListFragment extends Fragment{
+public class NewsListFragment extends Fragment {
     private final int SUCCESS = 0X01;
     private final int ERROR = 0X02;
     private final int CANCELLED = 0x03;
-    private  String TAG;
+    private String TAG;
     private ListView mListView;
     private String types[] = {"头条", "新闻", "财经", "体育", "娱乐", "军事", "教育", "科技", "NBA", "股票", "星座", "女性", "健康", "育儿"};
     private NewsListAdapter adapter;
     private ArrayList<NewsModel> data;
     private LoadingView mLoadingView;
-
+    private RefreshLayout refreshLayout;
     private int start;
     private boolean isLoading;
     private Callback.Cancelable getNewsPost;
@@ -48,14 +53,16 @@ public class NewsListFragment extends Fragment{
                 case SUCCESS:
                     adapter.notifyDataSetChanged(data);
                     mLoadingView.setVisibility(View.GONE);
+                    refreshLayout.finishLoadmore();
+                    refreshLayout.finishRefresh();
                     isLoading = false;
                     break;
                 case ERROR:
-                    Log.e(TAG,"error");
+                    Log.e(TAG, "error");
                     mLoadingView.setVisibility(View.GONE);
                     break;
                 case CANCELLED:
-                    Log.e(TAG,"cancelled");
+                    Log.e(TAG, "cancelled");
                     mLoadingView.setVisibility(View.GONE);
                     break;
             }
@@ -85,11 +92,24 @@ public class NewsListFragment extends Fragment{
         isLoading = false;
         getNewsData();
         mLoadingView.setVisibility(View.VISIBLE);
+        refreshLayout = view.findViewById(R.id.refreshLayout);
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                refreshNews();
+            }
+        });
+        refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
+            @Override
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                loadMoreNews();
+            }
+        });
         return view;
     }
 
     public void getNewsData() {
-        Log.e(TAG,"getNewsData");
+        Log.e(TAG, "getNewsData");
         isLoading = true;
         int index = getArguments().getInt("index");
         RequestParams params = new RequestParams(GlobalValue.NEWS);
@@ -122,7 +142,7 @@ public class NewsListFragment extends Fragment{
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                Log.e(TAG,"error:" + ex.toString());
+                Log.e(TAG, "error:" + ex.toString());
                 Message msg = new Message();
                 msg.what = ERROR;
                 handler.sendMessage(msg);
@@ -142,19 +162,22 @@ public class NewsListFragment extends Fragment{
         });
     }
 
-    private void refreshNews(){
+    private void refreshNews() {
         data.clear();
         start = 0;
         getNewsData();
     }
-    private void loadMoreNews(){
-        start = start+20;
-        getNewsData();
+
+    private void loadMoreNews() {
+        start = start + 10;
+        if(!isLoading){
+            getNewsData();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.e(TAG,"onDestroy");
+        Log.e(TAG, "onDestroy");
     }
 }
