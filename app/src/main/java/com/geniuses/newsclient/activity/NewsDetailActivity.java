@@ -1,6 +1,10 @@
 package com.geniuses.newsclient.activity;
 
 import android.content.Intent;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 
 import com.geniuses.newsclient.R;
@@ -12,8 +16,7 @@ import com.geniuses.newsclient.util.ImageUtils;
  */
 
 public class NewsDetailActivity extends BasicActivity{
-    private ImageView iv_pic;
-
+    private WebView mWebView;
     @Override
     public int getActivity() {
         return R.layout.activity_newsdetail;
@@ -22,7 +25,8 @@ public class NewsDetailActivity extends BasicActivity{
     @Override
     protected void initView() {
         initTitle();
-        iv_pic = findViewById(R.id.iv_news_detail_pic);
+        mWebView = findViewById(R.id.web_view_news_detail);
+
 
     }
 
@@ -31,7 +35,14 @@ public class NewsDetailActivity extends BasicActivity{
         Intent intent = getIntent();
         NewsModel newsModel = (NewsModel) intent.getSerializableExtra("newsModel");
         toolbar.setSubtitle(newsModel.getTitle());
-        ImageUtils.loadNetResource(this,newsModel.getPic(),iv_pic);
+
+        mWebView.getSettings().setJavaScriptEnabled(true);//支持javascript
+        mWebView.requestFocus();//触摸焦点起作用mWebView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);//取消滚动条
+        mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);//设置允许js弹出alert对话框
+        mWebView.getSettings().setSupportMultipleWindows(true);
+        mWebView.setWebViewClient(new WebViewClient());
+        mWebView.setWebChromeClient(new WebChromeClient());
+        mWebView.loadUrl(newsModel.getUrl());
 
     }
 }
