@@ -17,7 +17,6 @@ import com.geniuses.newsclient.entity.NewsModel;
 import com.geniuses.newsclient.manager.GsonManager;
 import com.geniuses.newsclient.util.GlobalValue;
 import com.mingle.widget.LoadingView;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -43,7 +42,6 @@ public class NewsListFragment extends Fragment {
     private LoadingView mLoadingView;
     private RefreshLayout refreshLayout;
     private int start;
-    private Callback.Cancelable getNewsPost;
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -113,11 +111,11 @@ public class NewsListFragment extends Fragment {
         params.addParameter("num", 20);
         params.addParameter("start", start);
         params.addParameter("appkey", GlobalValue.APPKEY);
-        getNewsPost = x.http().post(params, new Callback.CommonCallback<String>() {
+        x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 try {
-                    if (start == 0) {
+                    if (start == 0) {//用来判断是刷新还是加载更多
                         data.clear();
                     }
                     JSONObject obj = new JSONObject(result);
@@ -169,11 +167,5 @@ public class NewsListFragment extends Fragment {
     private void loadMoreNews() {
         start = start + 20;
         getNewsData();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.e(TAG, "onDestroy");
     }
 }
