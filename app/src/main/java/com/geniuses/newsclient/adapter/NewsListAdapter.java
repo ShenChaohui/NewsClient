@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.geniuses.newsclient.R;
 import com.geniuses.newsclient.entity.NewsModel;
 import com.geniuses.newsclient.util.ImageUtils;
-
 import java.util.ArrayList;
 /**
  * Created by Sch on 2017/12/1.
@@ -61,7 +60,12 @@ public class NewsListAdapter extends BaseAdapter {
         if (viewHolder != null) {
             viewHolder.tv_title.setText(data.get(position).getTitle());
             viewHolder.tv_date.setText(data.get(position).getTime());
-            ImageUtils.loadNetResource(context, data.get(position).getPic(), viewHolder.iv_pic);
+           if(data.get(position).getPic() == null||data.get(position).getPic().equals("")){
+                viewHolder.iv_pic.setVisibility(View.GONE);
+           }else {
+               viewHolder.iv_pic.setVisibility(View.VISIBLE);
+                   ImageUtils.loadNetResource(data.get(position).getPic(), viewHolder.iv_pic);
+           }
         }
         return convertView;
     }

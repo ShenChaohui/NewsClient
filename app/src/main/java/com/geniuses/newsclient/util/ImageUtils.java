@@ -1,35 +1,24 @@
 package com.geniuses.newsclient.util;
 
-import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.geniuses.newsclient.R;
-
-
-import java.io.File;
+import org.xutils.common.Callback;
+import org.xutils.image.ImageOptions;
+import org.xutils.x;
 
 public class ImageUtils {
-    public static void loadNetResource(Context context, String url, ImageView imageView){
-        Glide.with(context)
-                .load(url)
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .error(R.mipmap.loading)
-                .into(imageView);
-    }
-    public static void loadMipmap(Context context,int id,ImageView imageView){
-        Glide.with(context)
-                .load(id)
-                .priority(Priority.HIGH)
-                .centerCrop()
-                .into(imageView);
-    }
-    public static void loadFile(Context context, File file, ImageView imageView){
-        Glide.with(context)
-                .load(file)
-                .priority(Priority.HIGH)
-                .into(imageView);
+    private static ImageOptions imageOptions = new ImageOptions.Builder()
+            .setFadeIn(true)
+//            .setCircular(true) //设置图片显示为圆形
+//            .setLoadingDrawableId(R.mipmap.loading)
+            .setSquare(true) //设置图片显示为正方形
+//            .setCrop(true).setSize(200, 200) //设置大小
+            .setIgnoreGif(true) //忽略Gif图片
+            .setRadius(20)//拐角弧度
+            .setUseMemCache(true) //设置使用MemCache，默认true
+            .build();
+
+    public static void loadNetResource(String url, final ImageView imageView) {
+        x.image().bind(imageView,url,imageOptions);
     }
 }
