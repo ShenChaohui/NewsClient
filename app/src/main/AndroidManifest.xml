@@ -14,19 +14,20 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".activity.MainActivity"
-            android:label="@string/app_name"
-            >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.NewsDetailActivity"
-            android:label="新闻详情">
-        </activity>
-        <activity android:name=".activity.ChatbotActivity"
-            android:label="一个智障"></activity>
+        <activity
+            android:name=".activity.NewsDetailActivity"
+            android:label="新闻详情"></activity>
+        <activity
+            android:name=".activity.ChatbotActivity"
+            android:label="智障机器人"
+            android:windowSoftInputMode="adjustResize"></activity>
     </application>
 
 </manifest>

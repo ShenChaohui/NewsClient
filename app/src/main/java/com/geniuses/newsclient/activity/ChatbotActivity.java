@@ -1,10 +1,13 @@
 package com.geniuses.newsclient.activity;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.geniuses.newsclient.R;
 import com.geniuses.newsclient.adapter.ChatListAdapter;
@@ -38,7 +41,19 @@ public class ChatbotActivity extends BasicActivity implements View.OnClickListen
 
     @Override
     protected void initView() {
+        initTitle();
         et = findViewById(R.id.et_chatbox);
+        et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    sendMsg(et.getText().toString());
+                    return true;
+                }
+                return false;
+            }
+        });
+
         btn = findViewById(R.id.btn_chatbox);
         lv = findViewById(R.id.lv_chatbox);
         btn.setOnClickListener(this);
@@ -47,54 +62,59 @@ public class ChatbotActivity extends BasicActivity implements View.OnClickListen
     @Override
     protected void main() {
         data = new ArrayList<>();
-        adapter = new ChatListAdapter(this,data);
+        adapter = new ChatListAdapter(this, data);
         lv.setAdapter(adapter);
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.btn_chatbox){
-            if(et.getText().toString().length()!=0){
-                data.add(new ChatMsgModel(0,et.getText().toString()));
-                adapter.updata(data);
+        if (v.getId() == R.id.btn_chatbox) {
+            if (et.getText().toString().length() == 0) {
+                return;
             }
-            RequestParams params = new RequestParams(GlobalValue.CHATBOX);
-            params.addParameter("info",et.getText().toString());
-            params.addParameter("appkey",GlobalValue.APPKEY);
-            x.http().post(params, new Callback.CommonCallback<String>() {
-                @Override
-                public void onSuccess(String result) {
-                    Log.e(TAG,result);
-                    try {
-                        JSONObject object = new JSONObject(result);
-                        String code = object.getString("code");
-                        if(code.equals("10000")){
-                            JSONObject obj = object.getJSONObject("result");
-                            String text = obj.getString("text");
-                            data.add(new ChatMsgModel(1,text));
-                            adapter.updata(data);
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-
-                }
-
-                @Override
-                public void onCancelled(CancelledException cex) {
-
-                }
-
-                @Override
-                public void onFinished() {
-
-                }
-            });
+            sendMsg(et.getText().toString());
         }
+    }
+
+    private void sendMsg(String msg) {
+        data.add(new ChatMsgModel(1, msg));
+        adapter.updata(data);
+        RequestParams params = new RequestParams(GlobalValue.CHATBOX);
+        params.addParameter("info", msg);
+        params.addParameter("appkey", GlobalValue.APPKEY);
+        et.setText("");
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject object = new JSONObject(result);
+                    String code = object.getString("code");
+                    if (code.equals("10000")) {
+                        JSONObject obj = object.getJSONObject("result");
+                        String text = obj.getString("text");
+                        data.add(new ChatMsgModel(0, text));
+                        adapter.updata(data);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
     }
 }

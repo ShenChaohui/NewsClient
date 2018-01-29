@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
     android:orientation="horizontal"
     android:paddingLeft="14dp"
     android:paddingRight="100dp"
-    android:paddingTop="10dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:paddingTop="10dp">
+
     <ImageView
         android:id="@+id/iv_ask_content_system_head"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@mipmap/system_msg_head"
-        />
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@mipmap/system_msg_head" />
+
     <TextView
-        android:background="@drawable/system_msg"
-        android:layout_marginTop="5dp"
-        android:textSize="10sp"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/tv_my_ask_content_system_msg"
+        android:id="@+id/tv_chatbox_system_msg"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/system_msg"
+        android:padding="8dp"
+        android:textSize="15sp" />
 </LinearLayout>
