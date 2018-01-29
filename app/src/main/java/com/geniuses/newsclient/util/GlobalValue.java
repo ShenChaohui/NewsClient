@@ -8,5 +8,6 @@ public class GlobalValue {
     public static final String APPKEY = "66177f7bd8031630351e5463691837ba";
     public static final String NEWS = "https://way.jd.com/jisuapi/get";
     public static final String WEATHER = "https://way.jd.com/he/freeweather";
+    public static final String CHATBOX = "https://way.jd.com/turing/turing";
 
 }

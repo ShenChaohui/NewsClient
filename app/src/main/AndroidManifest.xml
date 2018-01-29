@@ -25,6 +25,8 @@
         <activity android:name=".activity.NewsDetailActivity"
             android:label="新闻详情">
         </activity>
+        <activity android:name=".activity.ChatbotActivity"
+            android:label="一个智障"></activity>
     </application>
 
 </manifest>

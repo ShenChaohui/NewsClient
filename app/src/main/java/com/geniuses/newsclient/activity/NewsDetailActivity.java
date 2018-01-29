@@ -42,7 +42,7 @@ public class NewsDetailActivity extends BasicActivity{
         mWebView.getSettings().setSupportMultipleWindows(true);
         mWebView.setWebViewClient(new WebViewClient());
         mWebView.setWebChromeClient(new WebChromeClient());
-        mWebView.loadUrl(newsModel.getUrl());
+        mWebView.loadUrl(newsModel.getWeburl());
 
     }
 }
