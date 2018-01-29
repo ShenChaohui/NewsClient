@@ -42,6 +42,7 @@ public class ChatbotActivity extends BasicActivity implements View.OnClickListen
     @Override
     protected void initView() {
         initTitle();
+        toolbar.setSubtitle("全球最热人工智障技术，尬聊开始.");
         et = findViewById(R.id.et_chatbox);
         et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

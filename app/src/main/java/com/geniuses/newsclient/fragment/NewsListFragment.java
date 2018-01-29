@@ -116,7 +116,6 @@ public class NewsListFragment extends Fragment {
     }
 
     public void getNewsData() {
-        Log.e(TAG, "getNewsData");
         int index = getArguments().getInt("index");
         RequestParams params = new RequestParams(GlobalValue.NEWS);
         params.addParameter("channel", types[index]);
