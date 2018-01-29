@@ -21,12 +21,14 @@ public class ChatListAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private Context context;
     ArrayList<ChatMsgModel> data;
-    public ChatListAdapter(Context context, ArrayList<ChatMsgModel> data){
+
+    public ChatListAdapter(Context context, ArrayList<ChatMsgModel> data) {
         this.context = context;
         this.data = data;
-        this.inflater= inflater.from(context);
+        this.inflater = inflater.from(context);
     }
-    public void updata(ArrayList<ChatMsgModel> data){
+
+    public void updata(ArrayList<ChatMsgModel> data) {
         this.data = data;
         notifyDataSetChanged();
     }
@@ -53,32 +55,33 @@ public class ChatListAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if(data.get(position).getType() == 0){
+        if (data.get(position).getType() == 0) {
             return 0;
-        }else {
+        } else {
             return 1;
         }
     }
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-       ViewHolder viewHolder = null;
-        if(view == null){
+        ViewHolder viewHolder = null;
+        if (view == null) {
             viewHolder = new ViewHolder();
             if (getItemViewType(i) == 0) {
                 view = inflater.inflate(R.layout.item_chatbox_system_msg, null);
                 viewHolder.tv_msg = view.findViewById(R.id.tv_chatbox_system_msg);
-            }else if(getItemViewType(i) == 1){
-                view = inflater.inflate(R.layout.item_chatbox_my_msg,null);
-                viewHolder.tv_msg  = view.findViewById(R.id.tv_chatbox_my_msg);
+            } else if (getItemViewType(i) == 1) {
+                view = inflater.inflate(R.layout.item_chatbox_my_msg, null);
+                viewHolder.tv_msg = view.findViewById(R.id.tv_chatbox_my_msg);
             }
             view.setTag(viewHolder);
-        }else {
+        } else {
             viewHolder = (ViewHolder) view.getTag();
         }
         viewHolder.tv_msg.setText(data.get(i).getMsg());
         return view;
     }
+
     class ViewHolder {
         TextView tv_msg;
     }

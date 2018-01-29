@@ -63,11 +63,11 @@ public class MainActivity extends AppCompatActivity
         mViewPager = findViewById(R.id.vp_main);
         mTitles = new ArrayList<>();
         mFragments = new ArrayList<>();
-        for(int i = 0;i<types.length;i++){
+        for (int i = 0; i < types.length; i++) {
             mTitles.add(types[i]);
             mFragments.add(NewsListFragment.newInstance(i));
         }
-        adapter = new NewsListFragmentAdapter(getSupportFragmentManager(),mFragments,mTitles);
+        adapter = new NewsListFragmentAdapter(getSupportFragmentManager(), mFragments, mTitles);
         mViewPager.setAdapter(adapter);
         mTabLyout.setupWithViewPager(mViewPager);
 
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-            startActivity(new Intent(MainActivity.this,ChatbotActivity.class));
+            startActivity(new Intent(MainActivity.this, ChatbotActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

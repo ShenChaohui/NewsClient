@@ -1,4 +1,5 @@
 package com.geniuses.newsclient.entity;
+
 import java.io.Serializable;
 
 /**
@@ -24,6 +25,7 @@ public class NewsModel implements Serializable {
     private String category;
     private String content;
     private String url;
+
     public String getSrc() {
         return src;
     }

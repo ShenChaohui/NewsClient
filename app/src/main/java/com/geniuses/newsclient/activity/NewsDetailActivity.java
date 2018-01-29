@@ -15,8 +15,9 @@ import com.geniuses.newsclient.util.ImageUtils;
  * Created by Sch on 2017/12/1.
  */
 
-public class NewsDetailActivity extends BasicActivity{
+public class NewsDetailActivity extends BasicActivity {
     private WebView mWebView;
+
     @Override
     public int getActivity() {
         return R.layout.activity_newsdetail;

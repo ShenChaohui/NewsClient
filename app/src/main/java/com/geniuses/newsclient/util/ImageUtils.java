@@ -2,6 +2,7 @@ package com.geniuses.newsclient.util;
 
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
+
 import org.xutils.common.Callback;
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
@@ -19,6 +20,6 @@ public class ImageUtils {
             .build();
 
     public static void loadNetResource(String url, final ImageView imageView) {
-        x.image().bind(imageView,url,imageOptions);
+        x.image().bind(imageView, url, imageOptions);
     }
 }

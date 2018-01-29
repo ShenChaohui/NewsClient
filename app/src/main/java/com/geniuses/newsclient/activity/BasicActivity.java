@@ -14,6 +14,7 @@ public abstract class BasicActivity extends AppCompatActivity {
     protected String TAG;
     protected Toolbar toolbar;
     protected Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +41,7 @@ public abstract class BasicActivity extends AppCompatActivity {
             }
         });
     }
+
     /**
      * 显示右侧按钮，并设置图片,获取按钮
      */
@@ -49,7 +51,10 @@ public abstract class BasicActivity extends AppCompatActivity {
         imageButton.setImageResource(resId);
         return imageButton;
     }
+
     public abstract int getActivity();
+
     protected abstract void initView();
+
     protected abstract void main();
 }

@@ -91,7 +91,7 @@ public class NewsListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-                intent.putExtra("newsModel",data.get(position));
+                intent.putExtra("newsModel", data.get(position));
                 startActivity(intent);
             }
         });
