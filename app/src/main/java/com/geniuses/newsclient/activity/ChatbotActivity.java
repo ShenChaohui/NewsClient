@@ -11,12 +11,15 @@ import android.widget.TextView;
 
 import com.geniuses.newsclient.R;
 import com.geniuses.newsclient.adapter.ChatListAdapter;
+import com.geniuses.newsclient.datebase.DatabaseOpenHelper;
 import com.geniuses.newsclient.entity.ChatMsgModel;
 import com.geniuses.newsclient.util.GlobalValue;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.DbManager;
 import org.xutils.common.Callback;
+import org.xutils.ex.DbException;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -62,7 +65,15 @@ public class ChatbotActivity extends BasicActivity implements View.OnClickListen
 
     @Override
     protected void main() {
-        data = new ArrayList<>();
+        DbManager db = DatabaseOpenHelper.getInstance();
+        try {
+            data = (ArrayList<ChatMsgModel>) db.findAll(ChatMsgModel.class);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        if(data == null){
+            data = new ArrayList<>();
+        }
         adapter = new ChatListAdapter(this, data);
         lv.setAdapter(adapter);
     }
@@ -118,4 +129,16 @@ public class ChatbotActivity extends BasicActivity implements View.OnClickListen
             }
         });
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+       DbManager db = DatabaseOpenHelper.getInstance();
+        try {
+            db.save(data);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

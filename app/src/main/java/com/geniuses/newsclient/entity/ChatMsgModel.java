@@ -1,11 +1,18 @@
 package com.geniuses.newsclient.entity;
 
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+
 /**
  * Created by Sch on 2018/1/29.
  */
-
+@Table(name = "ChatMsgModel")
 public class ChatMsgModel {
+    @Column(name = "ID",isId = true,autoGen = true)
+    private int id;
+    @Column(name = "TYPE")
     private int type;
+    @Column(name = "MSG")
     private String msg;
 
     public ChatMsgModel(int type, String msg) {

@@ -2,6 +2,8 @@ package com.geniuses.newsclient;
 
 import android.app.Application;
 
+import org.xutils.DbManager;
+import org.xutils.db.table.TableEntity;
 import org.xutils.x;
 
 /**

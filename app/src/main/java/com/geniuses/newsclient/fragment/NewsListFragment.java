@@ -57,11 +57,9 @@ public class NewsListFragment extends Fragment {
                     refreshLayout.finishRefresh();
                     break;
                 case ERROR:
-                    Log.e(TAG, "error");
                     mLoadingView.setVisibility(View.GONE);
                     break;
                 case CANCELLED:
-                    Log.e(TAG, "cancelled");
                     mLoadingView.setVisibility(View.GONE);
                     break;
             }
