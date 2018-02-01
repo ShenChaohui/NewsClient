@@ -32,4 +32,5 @@ dependencies {
     compile 'com.github.zzz40500:android-shapeLoadingView:1.0.3.2' //加载中动画
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.4'//下拉刷新
+    compile 'com.aliyun.ams:alicloud-android-hotfix:3.2.0'//阿里热修复
 }
