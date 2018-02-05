@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -68,14 +69,36 @@ public class ChatbotActivity extends BasicActivity implements View.OnClickListen
         DbManager db = DatabaseOpenHelper.getInstance();
         try {
             data = (ArrayList<ChatMsgModel>) db.findAll(ChatMsgModel.class);
+            if (data == null) {
+                data = new ArrayList<>();
+            } else {
+                db.delete(data);
+            }
+
         } catch (DbException e) {
             e.printStackTrace();
         }
-        if(data == null){
-            data = new ArrayList<>();
-        }
+
         adapter = new ChatListAdapter(this, data);
         lv.setAdapter(adapter);
+        lv.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (visibleItemCount < totalItemCount) {
+                    //没有一次显示完
+                    lv.setStackFromBottom(true);
+                } else {
+                    //一次显示完了
+                    lv.setStackFromBottom(false);
+                }
+            }
+        });
     }
 
     @Override
@@ -133,7 +156,7 @@ public class ChatbotActivity extends BasicActivity implements View.OnClickListen
     @Override
     protected void onPause() {
         super.onPause();
-       DbManager db = DatabaseOpenHelper.getInstance();
+        DbManager db = DatabaseOpenHelper.getInstance();
         try {
             db.save(data);
         } catch (DbException e) {

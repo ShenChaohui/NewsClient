@@ -14,8 +14,7 @@
         android:background="#F0F8FF"
         android:divider="@null"
         android:paddingBottom="20dp"
-        android:stackFromBottom="false"
-        android:transcriptMode="alwaysScroll"></ListView>
+        ></ListView>
 
     <LinearLayout
         android:layout_width="match_parent"
