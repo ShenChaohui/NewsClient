@@ -13,8 +13,7 @@
         android:layout_weight="1"
         android:background="#F0F8FF"
         android:divider="@null"
-        android:paddingBottom="20dp"
-        ></ListView>
+        android:paddingBottom="20dp"></ListView>
 
     <LinearLayout
         android:layout_width="match_parent"

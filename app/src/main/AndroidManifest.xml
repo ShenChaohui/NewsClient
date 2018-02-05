@@ -28,6 +28,9 @@
             android:name=".activity.ChatbotActivity"
             android:label="智障机器人"
             android:windowSoftInputMode="adjustResize"></activity>
+        <activity android:name=".activity.WeatherActivity"
+            android:label="天气"
+            ></activity>
     </application>
 
 </manifest>
