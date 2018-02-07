@@ -60,6 +60,14 @@ public class WeatherActivity extends BasicActivity {
         for (WeatherModel weatherModel : mData) {
             getWeatherInfo(weatherModel);
         }
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(context,WeatherInfoActivity.class);
+                intent.putExtra("weatherJson",mData.get(position).getWeatherJson());
+                startActivity(intent);
+            }
+        });
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {

@@ -1,5 +1,6 @@
 package com.geniuses.newsclient.entity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -44,20 +45,18 @@ public class WeatherModel {
         this.weatherJson = weatherJson;
     }
 
-
-    public String getNowWeather(){
+    public String getNowWeather() {
         StringBuffer todayWeather = new StringBuffer();
         if (weatherJson != null) {
             try {
                 JSONObject object = new JSONObject(weatherJson);
                 JSONObject now = object.getJSONObject("now");
-                todayWeather.append(now.getJSONObject("cond").getString("txt")+"----");
-                todayWeather.append("当前温度："+now.getString("tmp")+"℃");
+                todayWeather.append(now.getJSONObject("cond").getString("txt") + "----");
+                todayWeather.append("当前温度：" + now.getString("tmp") + "℃");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-
         return todayWeather.toString();
     }
 }

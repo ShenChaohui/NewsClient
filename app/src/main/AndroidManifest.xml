@@ -25,19 +25,22 @@
         </activity>
         <activity
             android:name=".activity.NewsDetailActivity"
-            android:label="新闻详情"></activity>
+            android:label="新闻详情"/>
         <activity
             android:name=".activity.ChatbotActivity"
             android:label="智障机器人"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".activity.WeatherActivity"
             android:label="天气"
-            ></activity>
+            />
         <activity
             android:name="com.zaaach.citypicker.CityPickerActivity"
             android:theme="@style/CityPicker.NoActionBar"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity android:name=".activity.WeatherInfoActivity"
+            android:label="天气详情"
+            />
     </application>
 
 </manifest>
