@@ -1,11 +1,8 @@
 package com.geniuses.newsclient.activity;
 
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,9 +28,8 @@ import java.util.ArrayList;
  * Created by Sch on 2018/1/29.
  */
 
-public class ChatbotActivity extends BasicActivity implements View.OnClickListener {
+public class ChatbotActivity extends BasicActivity {
     private EditText et;
-    private Button btn;
     private ListView lv;
     private ChatListAdapter adapter;
     private ArrayList<ChatMsgModel> data;
@@ -59,9 +55,7 @@ public class ChatbotActivity extends BasicActivity implements View.OnClickListen
             }
         });
 
-        btn = findViewById(R.id.btn_chatbox);
         lv = findViewById(R.id.lv_chatbox);
-        btn.setOnClickListener(this);
     }
 
     @Override
@@ -100,17 +94,6 @@ public class ChatbotActivity extends BasicActivity implements View.OnClickListen
             }
         });
     }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.btn_chatbox) {
-            if (et.getText().toString().length() == 0) {
-                return;
-            }
-            sendMsg(et.getText().toString());
-        }
-    }
-
     private void sendMsg(String msg) {
         data.add(new ChatMsgModel(1, msg));
         adapter.updata(data);
