@@ -1,13 +1,16 @@
 package com.geniuses.newsclient.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import com.geniuses.newsclient.R;
 import com.geniuses.newsclient.adapter.WeatherListAdapter;
 import com.geniuses.newsclient.datebase.DatabaseOpenHelper;
 import com.geniuses.newsclient.entity.WeatherModel;
+import com.geniuses.newsclient.util.DialogUtils;
 import com.geniuses.newsclient.util.GlobalValue;
 import com.zaaach.citypicker.CityPickerActivity;
 
@@ -57,6 +60,19 @@ public class WeatherActivity extends BasicActivity {
         for (WeatherModel weatherModel : mData) {
             getWeatherInfo(weatherModel);
         }
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                DialogUtils.showDialog(context, "确定删除" + mData.get(position).getCity() + "吗", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mData.remove(position);
+                        adapter.updateData(mData);
+                    }
+                });
+                return false;
+            }
+        });
     }
 
     private void getWeatherInfo(final WeatherModel weatherModel) {
