@@ -6,4 +6,10 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_basic">BasicActivity</string>
+    <string name="temp">%s°</string>
+    <string name="tempC">%s℃</string>
+    <string name="now_max_temp">↑&#160;%s°</string>
+    <string name="now_min_temp">↓&#160;%s°</string>
+    <string name="hourly_forecast_wind">%s级</string>
+    <string name="daily_forecast_temp">%1$s~%2$s°</string>
 </resources>

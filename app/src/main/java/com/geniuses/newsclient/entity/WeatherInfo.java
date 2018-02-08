@@ -1,5 +1,8 @@
 package com.geniuses.newsclient.entity;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -433,7 +436,21 @@ public class WeatherInfo {
         }
     }
 
-    public static class SuggestionBean {
+
+
+    public static class SuggestionBean implements Serializable{
+        public static class Entity implements Serializable {
+            /**
+             * 简介
+             */
+            @SerializedName("brf")
+            public String brf;
+            /**
+             * 详情
+             */
+            @SerializedName("txt")
+            public String txt;
+        }
         /**
          * air : {"brf":"中","txt":"气象条件对空气污染物稀释、扩散和清除无明显影响，易感人群应适当减少室外活动时间。"}
          * comf : {"brf":"较不舒适","txt":"白天天气较凉，且风力较强，您会感觉偏冷，不很舒适，请注意添加衣物，以防感冒。"}
@@ -445,76 +462,76 @@ public class WeatherInfo {
          * uv : {"brf":"最弱","txt":"属弱紫外线辐射天气，无需特别防护。若长期在户外，建议涂擦SPF在8-12之间的防晒护肤品。"}
          */
 
-        private AirBean air;
-        private ComfBean comf;
-        private CwBean cw;
-        private DrsgBean drsg;
-        private FluBean flu;
-        private SportBean sport;
-        private TravBean trav;
-        private UvBean uv;
+        private Entity air;
+        private Entity comf;
+        private Entity cw;
+        private Entity drsg;
+        private Entity flu;
+        private Entity sport;
+        private Entity trav;
+        private Entity uv;
 
-        public AirBean getAir() {
+        public Entity getAir() {
             return air;
         }
 
-        public void setAir(AirBean air) {
+        public void setAir(Entity air) {
             this.air = air;
         }
 
-        public ComfBean getComf() {
+        public Entity getComf() {
             return comf;
         }
 
-        public void setComf(ComfBean comf) {
+        public void setComf(Entity comf) {
             this.comf = comf;
         }
 
-        public CwBean getCw() {
+        public Entity getCw() {
             return cw;
         }
 
-        public void setCw(CwBean cw) {
+        public void setCw(Entity cw) {
             this.cw = cw;
         }
 
-        public DrsgBean getDrsg() {
+        public Entity getDrsg() {
             return drsg;
         }
 
-        public void setDrsg(DrsgBean drsg) {
+        public void setDrsg(Entity drsg) {
             this.drsg = drsg;
         }
 
-        public FluBean getFlu() {
+        public Entity getFlu() {
             return flu;
         }
 
-        public void setFlu(FluBean flu) {
+        public void setFlu(Entity flu) {
             this.flu = flu;
         }
 
-        public SportBean getSport() {
+        public Entity getSport() {
             return sport;
         }
 
-        public void setSport(SportBean sport) {
+        public void setSport(Entity sport) {
             this.sport = sport;
         }
 
-        public TravBean getTrav() {
+        public Entity getTrav() {
             return trav;
         }
 
-        public void setTrav(TravBean trav) {
+        public void setTrav(Entity trav) {
             this.trav = trav;
         }
 
-        public UvBean getUv() {
+        public Entity getUv() {
             return uv;
         }
 
-        public void setUv(UvBean uv) {
+        public void setUv(Entity uv) {
             this.uv = uv;
         }
 
