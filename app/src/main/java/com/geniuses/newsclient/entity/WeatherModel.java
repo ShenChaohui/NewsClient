@@ -44,18 +44,4 @@ public class WeatherModel {
         this.weatherJson = weatherJson;
     }
 
-    public String getNowWeather() {
-        StringBuffer todayWeather = new StringBuffer();
-        if (weatherJson != null) {
-            try {
-                JSONObject object = new JSONObject(weatherJson);
-                JSONObject now = object.getJSONObject("now");
-                todayWeather.append(now.getJSONObject("cond").getString("txt") + "----");
-                todayWeather.append("当前温度：" + now.getString("tmp") + "℃");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return todayWeather.toString();
-    }
 }

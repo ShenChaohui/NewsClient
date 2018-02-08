@@ -2,6 +2,8 @@ package com.geniuses.newsclient.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -34,6 +36,8 @@ public class WeatherListActivity extends BasicActivity {
     private ListView mListView;//城市列表
     private WeatherListAdapter adapter;
     private ArrayList<WeatherModel> mData;
+    private Toolbar mToolbar;
+    private FloatingActionButton fab;
 
     @Override
     public int getActivity() {
@@ -42,8 +46,16 @@ public class WeatherListActivity extends BasicActivity {
 
     @Override
     protected void initView() {
-        initTitle();
-        getRightButton(R.mipmap.ic_add).setOnClickListener(new View.OnClickListener() {
+        mToolbar = findViewById(R.id.toolbar);
+        mToolbar.setSubtitle(getTitle());
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WeatherListActivity.this.finish();
+            }
+        });
+        fab = findViewById(R.id.fab_weather_list);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivityForResult(new Intent(WeatherListActivity.this, CityPickerActivity.class),
