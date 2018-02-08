@@ -1,18 +1,29 @@
 package com.geniuses.newsclient.activity;
 
 import android.content.Intent;
-import android.util.Log;
-
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import com.geniuses.newsclient.R;
-import com.geniuses.newsclient.entity.WeatherInfo;
-import com.geniuses.newsclient.manager.GsonManager;
+import com.geniuses.newsclient.adapter.WeatherInfoFragmentAdapter;
+import com.geniuses.newsclient.datebase.DatabaseOpenHelper;
+import com.geniuses.newsclient.entity.WeatherModel;
+import com.geniuses.newsclient.fragment.WeatherInfoFragment;
+
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
+
+import java.util.ArrayList;
 
 /**
  * Created by Sch on 2018/2/7.
  */
 
 public class WeatherInfoActivity extends BasicActivity {
-    private WeatherInfo weatherInfo;
+    private ViewPager mViewPager;
+    private ArrayList<WeatherModel> mData;
+    private ArrayList<Fragment> mFragments;
+    private WeatherInfoFragmentAdapter adapter;
+    private int position;
     @Override
     public int getActivity() {
         return R.layout.activity_weather_info;
@@ -21,14 +32,30 @@ public class WeatherInfoActivity extends BasicActivity {
     @Override
     protected void initView() {
         initTitle();
-
+        mViewPager = findViewById(R.id.vp_weather_info);
     }
 
     @Override
     protected void main() {
         Intent intent = getIntent();
-        String weatherJson = intent.getStringExtra("weatherJson");
-        weatherInfo = GsonManager.getGson().fromJson(weatherJson, WeatherInfo.class);
-        Log.e("test",weatherInfo.getDaily_forecast().get(0).getCond().getTxt_n());
+        position = intent.getIntExtra("position",0);
+        DbManager db = DatabaseOpenHelper.getInstance();
+        try {
+          mData = (ArrayList<WeatherModel>) db.findAll(WeatherModel.class);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        mFragments = new ArrayList<>();
+        if(mData != null){
+            for(int i = 0;i<mData.size();i++){
+                mFragments.add(WeatherInfoFragment.newInstance(i));
+            }
+        }
+        adapter = new WeatherInfoFragmentAdapter(getSupportFragmentManager(),mFragments);
+        mViewPager.setAdapter(adapter);
+        mViewPager.setCurrentItem(position);
+    }
+    public ArrayList<WeatherModel> getWeatherModelList(){
+        return mData;
     }
 }

@@ -1,6 +1,5 @@
 package com.geniuses.newsclient.entity;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -14,7 +13,7 @@ public class WeatherModel {
     @Column(name = "ID", isId = true, autoGen = true)
     private int id;
     @Column(name = "CITY")
-    private String city;
+    private String cityName;
     @Column(name = "WEATHETJSON")
     private String weatherJson;
 
@@ -29,12 +28,12 @@ public class WeatherModel {
         this.id = id;
     }
 
-    public String getCity() {
-        return city;
+    public String getCityName() {
+        return cityName;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 
     public String getWeatherJson() {

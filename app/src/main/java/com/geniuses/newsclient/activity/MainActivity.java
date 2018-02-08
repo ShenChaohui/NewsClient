@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_weather) {
-            startActivity(new Intent(MainActivity.this, WeatherActivity.class));
+            startActivity(new Intent(MainActivity.this, WeatherListActivity.class));
 
         } else if (id == R.id.nav_chat) {
             startActivity(new Intent(MainActivity.this, ChatbotActivity.class));

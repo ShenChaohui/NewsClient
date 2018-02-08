@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * Created by Sch on 2018/2/5.
  */
 
-public class WeatherActivity extends BasicActivity {
+public class WeatherListActivity extends BasicActivity {
     private static final int REQUEST_CODE_PICK_CITY = 0;
     private ListView mListView;//城市列表
     private WeatherListAdapter adapter;
@@ -37,7 +37,7 @@ public class WeatherActivity extends BasicActivity {
 
     @Override
     public int getActivity() {
-        return R.layout.activity_weather;
+        return R.layout.activity_weather_list;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class WeatherActivity extends BasicActivity {
         getRightButton(R.mipmap.ic_add).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(WeatherActivity.this, CityPickerActivity.class),
+                startActivityForResult(new Intent(WeatherListActivity.this, CityPickerActivity.class),
                         REQUEST_CODE_PICK_CITY);
             }
         });
@@ -64,21 +64,21 @@ public class WeatherActivity extends BasicActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(context,WeatherInfoActivity.class);
-                intent.putExtra("weatherJson",mData.get(position).getWeatherJson());
+                intent.putExtra("position",position);
                 startActivity(intent);
             }
         });
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                DialogUtils.showDialog(context, "确定删除" + mData.get(position).getCity() + "吗", new DialogInterface.OnClickListener() {
+                DialogUtils.showDialog(context, "确定删除" + mData.get(position).getCityName() + "吗", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mData.remove(position);
                         adapter.updateData(mData);
                     }
                 });
-                return false;
+                return true;
             }
         });
     }
@@ -86,11 +86,10 @@ public class WeatherActivity extends BasicActivity {
     private void getWeatherInfo(final WeatherModel weatherModel) {
         RequestParams params = new RequestParams(GlobalValue.WEATHER);
         params.addParameter("appkey", GlobalValue.APPKEY);
-        params.addParameter("city", weatherModel.getCity());
+        params.addParameter("city", weatherModel.getCityName());
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.e(TAG, result);
                 try {
                     JSONObject object = new JSONObject(result);
                     JSONObject resultObj = object.getJSONObject("result");
@@ -126,7 +125,7 @@ public class WeatherActivity extends BasicActivity {
             if (data != null) {
                 String city = data.getStringExtra(CityPickerActivity.KEY_PICKED_CITY);
                 WeatherModel weatherModel = new WeatherModel();
-                weatherModel.setCity(city);
+                weatherModel.setCityName(city);
                 getWeatherInfo(weatherModel);
                 mData.add(weatherModel);
                 adapter.updateData(mData);
@@ -138,9 +137,6 @@ public class WeatherActivity extends BasicActivity {
         DbManager db = DatabaseOpenHelper.getInstance();
         try {
             mData = (ArrayList<WeatherModel>) db.findAll(WeatherModel.class);
-            if (mData != null) {
-                db.delete(mData);
-            }
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -151,10 +147,14 @@ public class WeatherActivity extends BasicActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
         DbManager db = DatabaseOpenHelper.getInstance();
         try {
+            ArrayList<WeatherModel> oldData = (ArrayList<WeatherModel>) db.findAll(WeatherModel.class);
+            if(oldData != null){
+                db.delete(oldData);
+            }
             db.save(mData);
         } catch (DbException e) {
             e.printStackTrace();

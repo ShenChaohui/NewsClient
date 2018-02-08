@@ -48,15 +48,15 @@ public class WeatherListAdapter extends BaseAdapter {
         ViewHolder viewHolder = null;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = View.inflate(context, R.layout.item_weather, null);
-            viewHolder.tv_city = convertView.findViewById(R.id.tv_item_weather_city);
+            convertView = View.inflate(context, R.layout.item_weather_list, null);
+            viewHolder.tv_city = convertView.findViewById(R.id.tv_item_weather_cityName);
             viewHolder.tv_weather = convertView.findViewById(R.id.tv_item_weather_weather);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         if (viewHolder != null) {
-            viewHolder.tv_city.setText(mData.get(position).getCity());
+            viewHolder.tv_city.setText(mData.get(position).getCityName());
             viewHolder.tv_weather.setText(mData.get(position).getNowWeather());
         }
         return convertView;

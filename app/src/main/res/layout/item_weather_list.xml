@@ -8,7 +8,7 @@
     <TextView
         android:layout_marginLeft="50dp"
         android:textSize="20sp"
-        android:id="@+id/tv_item_weather_city"
+        android:id="@+id/tv_item_weather_cityName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

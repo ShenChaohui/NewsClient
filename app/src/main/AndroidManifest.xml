@@ -30,7 +30,7 @@
             android:name=".activity.ChatbotActivity"
             android:label="智障机器人"
             android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".activity.WeatherActivity"
+        <activity android:name=".activity.WeatherListActivity"
             android:label="天气"
             />
         <activity
