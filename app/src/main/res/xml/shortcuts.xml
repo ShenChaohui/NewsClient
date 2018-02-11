@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcut xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="weather"
+        android:enabled="true"
+        android:icon="@mipmap/ic_weather"
+        android:shortcutShortLabel="@string/weather_list_activity"
+        android:shortcutLongLabel="@string/weather_list_activity"
+        android:shortcutDisabledMessage="@string/weather_list_activity">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.geniuses.newsclient"
+            android:targetClass="com.geniuses.newsclient.activity.WeatherListActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="chatbot"
+        android:enabled="true"
+        android:icon="@mipmap/ic_chat"
+        android:shortcutShortLabel="@string/chatbox_activity"
+        android:shortcutLongLabel="@string/chatbox_activity"
+        android:shortcutDisabledMessage="@string/chatbox_activity">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.geniuses.newsclient"
+            android:targetClass="com.geniuses.newsclient.activity.ChatbotActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+</shortcut>
