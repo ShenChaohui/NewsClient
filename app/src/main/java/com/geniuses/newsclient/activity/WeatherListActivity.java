@@ -2,6 +2,7 @@ package com.geniuses.newsclient.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -37,6 +38,7 @@ public class WeatherListActivity extends BasicActivity {
     private WeatherListAdapter adapter;
     private ArrayList<WeatherModel> mData;
     private Toolbar mToolbar;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
     private FloatingActionButton fab;
 
     @Override
@@ -47,13 +49,14 @@ public class WeatherListActivity extends BasicActivity {
     @Override
     protected void initView() {
         mToolbar = findViewById(R.id.toolbar);
-        mToolbar.setSubtitle(getTitle());
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 WeatherListActivity.this.finish();
             }
         });
+        collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar_weather_list);
+        collapsingToolbarLayout.setTitle(getTitle());
         fab = findViewById(R.id.fab_weather_list);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
