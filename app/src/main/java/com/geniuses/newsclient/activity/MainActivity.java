@@ -16,16 +16,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.geniuses.newsclient.fragment.NewsListFragment;
 import com.geniuses.newsclient.R;
 import com.geniuses.newsclient.adapter.NewsListFragmentAdapter;
+import com.geniuses.newsclient.util.SharedPreferencesUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String ACTION_ADD_SHORTCUT = "com.android.launcher.action.INSTALL_SHORTCUT";
     private String types[] = {"头条", "新闻", "财经", "体育", "娱乐", "军事", "教育", "科技", "NBA", "股票", "星座", "女性", "健康", "育儿"};
     private List<Fragment> mFragments;
     private List<String> mTitles;
@@ -38,6 +41,12 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        boolean isFirst = SharedPreferencesUtil.getBoolean(this,"isFirst",true);
+        if(isFirst){
+            addShortcut();
+        }
+        isFirst = false;
+        SharedPreferencesUtil.saveBoolean(this,"isFirst",isFirst);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -121,5 +130,31 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void addShortcut() {
+        Intent addShortcutIntent = new Intent(ACTION_ADD_SHORTCUT);
+
+        // 不允许重复创建
+        addShortcutIntent.putExtra("duplicate", false);
+
+        // 名字
+        addShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME,R.string.app_name);
+
+        // 图标
+        addShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+                Intent.ShortcutIconResource.fromContext(MainActivity.this,
+                        R.mipmap.ic_logo));
+
+        // 设置关联程序
+        Intent launcherIntent = new Intent(Intent.ACTION_MAIN);
+        launcherIntent.setClass(MainActivity.this, MainActivity.class);
+        launcherIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+        addShortcutIntent
+                .putExtra(Intent.EXTRA_SHORTCUT_INTENT, launcherIntent);
+        // 发送广播
+        sendBroadcast(addShortcutIntent);
+        Toast.makeText(this,"快捷方式已创建",Toast.LENGTH_SHORT).show();
     }
 }
