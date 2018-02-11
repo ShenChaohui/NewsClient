@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 添加快捷方式 -->
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 读写sdcard，storage等等 -->
     <application
         android:name=".NewsClientApplication"
         android:allowBackup="true"

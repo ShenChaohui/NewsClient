@@ -1,10 +1,14 @@
 package com.geniuses.newsclient.util;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.widget.Toast;
 
 import com.geniuses.newsclient.R;
+
+import org.xutils.common.util.LogUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,9 +22,10 @@ import java.util.Map;
 
 public class CommonUtils {
 
-    public static void showToast(Context context, String toast){
-        Toast.makeText(context,toast, Toast.LENGTH_LONG).show();
+    public static void showToast(Context context, String toast) {
+        Toast.makeText(context, toast, Toast.LENGTH_LONG).show();
     }
+
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      */
@@ -28,6 +33,7 @@ public class CommonUtils {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
+
     /**
      * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
      */
@@ -35,13 +41,15 @@ public class CommonUtils {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
+
     /**
      * 获取应用程序数据包根目录
+     *
      * @return
      */
-    public static String getAppDirPath(Context context){
+    public static String getAppDirPath(Context context) {
         String _SDPath = getSDPath();
-        String dirPathString = 	_SDPath+ "/"
+        String dirPathString = _SDPath + "/"
                 + context.getString(R.string.app_name);
         File file = new File(dirPathString);
         if (!file.exists()) {
@@ -49,8 +57,10 @@ public class CommonUtils {
         }
         return dirPathString;
     }
+
     /**
      * 获取sd卡地址
+     *
      * @return
      */
     public static String getSDPath() {
@@ -60,29 +70,32 @@ public class CommonUtils {
         if (sdCardExist) {
             sdDir = Environment.getExternalStorageDirectory();// 获取根目录
             return sdDir.toString();
-        }else{
+        } else {
             return "-1";
         }
     }
-    public static boolean isEmpty(Object object){
-        if (object instanceof String){
+
+    public static boolean isEmpty(Object object) {
+        if (object instanceof String) {
             if ("".equals(object) || object == null)
                 return true;
         }
-        if (object instanceof List){
+        if (object instanceof List) {
             if (((ArrayList) object).size() == 0 || object == null)
                 return true;
         }
-        if (object instanceof Map){
-            if (((Map) object).size() == 0 || object == null){
+        if (object instanceof Map) {
+            if (((Map) object).size() == 0 || object == null) {
                 return true;
             }
         }
         return false;
     }
-    public static void tagToDo(String string){
+
+    public static void tagToDo(String string) {
 
     }
+
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      */
@@ -99,23 +112,41 @@ public class CommonUtils {
         return (int) (pxValue / scale + 0.5f);
     }
 
-        private static long lastClickTime;
-        public static boolean isFastDoubleClick() {
-            long time = System.currentTimeMillis();
-            long timeD = time - lastClickTime;
-            if ( 0 < timeD && timeD < 800) {
-                return true;
-            }
-            lastClickTime = time;
-            return false;
+    private static long lastClickTime;
+
+    public static boolean isFastDoubleClick() {
+        long time = System.currentTimeMillis();
+        long timeD = time - lastClickTime;
+        if (0 < timeD && timeD < 800) {
+            return true;
         }
-        public static String isExistDir(String saveDir) throws IOException {
-            // 下载位置
-            File downloadFile = new File(saveDir);
-            if (!downloadFile.mkdirs()) {
-                downloadFile.createNewFile();
-            }
-            String savePath = downloadFile.getAbsolutePath();
-            return savePath;
+        lastClickTime = time;
+        return false;
+    }
+
+    public static String isExistDir(String saveDir) throws IOException {
+        // 下载位置
+        File downloadFile = new File(saveDir);
+        if (!downloadFile.mkdirs()) {
+            downloadFile.createNewFile();
         }
+        String savePath = downloadFile.getAbsolutePath();
+        return savePath;
+    }
+
+    /**
+     * 获取本地软件版本号
+     */
+    public static int getLocalVersion(Context ctx) {
+        int localVersion = 0;
+        try {
+            PackageInfo packageInfo = ctx.getApplicationContext()
+                    .getPackageManager()
+                    .getPackageInfo(ctx.getPackageName(), 0);
+            localVersion = packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return localVersion;
+    }
 }
