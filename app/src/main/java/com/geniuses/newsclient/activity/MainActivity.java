@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -184,7 +185,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onSuccess(String result) {
                 final AppBean appBean = GsonManager.getGson().fromJson(result, AppBean.class);
-               final String path = CommonUtils.getAppDirPath(MainActivity.this)+"/UpdateApk/掌上新闻"+appBean.getData().getBuildVersion()+".apk";
+                final String updatePath = CommonUtils.getAppDirPath(MainActivity.this) + "/UpdateApk/掌上新闻" + appBean.getData().getBuildVersion() + ".apk";
                 if (Integer.valueOf(appBean.getData().getBuildVersionNo()) == Integer.valueOf(CommonUtils.getLocalVersion(MainActivity.this))) {
                     Log.e("update", "最新版本");
                 } else {
@@ -199,7 +200,7 @@ public class MainActivity extends AppCompatActivity
                                         public void onClick(
                                                 DialogInterface dialog,
                                                 int which) {
-                                            DownloadUpdateApp(appBean.getData().getDownloadURL(),path);
+                                            DownloadUpdateApp(appBean.getData().getDownloadURL(), updatePath);
                                         }
                                     }).show();
                 }
@@ -221,7 +222,9 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
     private ProgressDialog progressDialog;
+
     private void DownloadUpdateApp(String url, final String updatePath) {
         progressDialog = new ProgressDialog(this);
         FileDownloader.setup(this);
@@ -239,17 +242,21 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-                        progressDialog.setMax(totalBytes/1024);
-                        progressDialog.setProgress(soFarBytes/1024);
+                        progressDialog.setMax(totalBytes / 1024);
+                        progressDialog.setProgress(soFarBytes / 1024);
                     }
 
                     @Override
                     protected void completed(BaseDownloadTask task) {
                         progressDialog.dismiss();
-                        File file= new File(updatePath);
-                        //参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致   参数3  共享的文件
-                        Uri apkUri =
-                                FileProvider.getUriForFile(MainActivity.this, "com.geniuses.newsclient.provider", file);
+                        File file = new File(updatePath);
+                        Uri apkUri;
+                        if (Build.VERSION.SDK_INT >= 25) {
+                            apkUri =
+                                    FileProvider.getUriForFile(MainActivity.this, "com.geniuses.newsclient.provider", file);
+                        } else {
+                            apkUri = Uri.parse("file://" + updatePath);
+                        }
 
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         // 由于没有在Activity环境下启动Activity,设置下面的标签
@@ -268,7 +275,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     protected void error(BaseDownloadTask task, Throwable e) {
                         progressDialog.dismiss();
-                        Toast.makeText(MainActivity.this,"下载失败。",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "下载失败。", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
