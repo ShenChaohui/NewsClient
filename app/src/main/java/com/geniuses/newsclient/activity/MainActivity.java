@@ -2,16 +2,16 @@ package com.geniuses.newsclient.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -29,18 +29,20 @@ import com.geniuses.newsclient.adapter.NewsListFragmentAdapter;
 import com.geniuses.newsclient.manager.GsonManager;
 import com.geniuses.newsclient.util.CommonUtils;
 import com.geniuses.newsclient.util.SharedPreferencesUtil;
+import com.liulishuo.filedownloader.BaseDownloadTask;
+import com.liulishuo.filedownloader.FileDownloadListener;
+import com.liulishuo.filedownloader.FileDownloader;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action1;
-
-import static com.pgyersdk.update.UpdateManagerListener.startDownloadTask;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -63,9 +65,6 @@ public class MainActivity extends AppCompatActivity
                 .subscribe(new Action1<Boolean>() {
                     @Override
                     public void call(Boolean granted) {
-                        if(granted){
-                        } else {
-                        }
                     }
                 });
         boolean isFirst = SharedPreferencesUtil.getBoolean(this, "isFirst", true);
@@ -184,9 +183,10 @@ public class MainActivity extends AppCompatActivity
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                final AppBean appBean = GsonManager.getGson().fromJson(result,AppBean.class);
-                if (Integer.valueOf(appBean.getData().getBuildVersionNo())== Integer.valueOf(CommonUtils.getLocalVersion(MainActivity.this))) {
-                    Log.e("update","最新版本");
+                final AppBean appBean = GsonManager.getGson().fromJson(result, AppBean.class);
+               final String path = CommonUtils.getAppDirPath(MainActivity.this)+"/UpdateApk/掌上新闻"+appBean.getData().getBuildVersion()+".apk";
+                if (Integer.valueOf(appBean.getData().getBuildVersionNo()) == Integer.valueOf(CommonUtils.getLocalVersion(MainActivity.this))) {
+                    Log.e("update", "最新版本");
                 } else {
                     new AlertDialog.Builder(MainActivity.this)
                             .setTitle("更新")
@@ -199,9 +199,7 @@ public class MainActivity extends AppCompatActivity
                                         public void onClick(
                                                 DialogInterface dialog,
                                                 int which) {
-                                            startDownloadTask(
-                                                    MainActivity.this,
-                                                    appBean.getData().getDownloadURL());
+                                            DownloadUpdateApp(appBean.getData().getDownloadURL(),path);
                                         }
                                     }).show();
                 }
@@ -209,7 +207,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                Log.e("update",ex.toString());
+                Log.e("update", ex.toString());
             }
 
             @Override
@@ -222,5 +220,62 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+    }
+    private ProgressDialog progressDialog;
+    private void DownloadUpdateApp(String url, final String updatePath) {
+        progressDialog = new ProgressDialog(this);
+        FileDownloader.setup(this);
+        FileDownloader.getImpl().create(url)
+                .setPath(updatePath)
+                .setListener(new FileDownloadListener() {
+                    @Override
+                    protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                        progressDialog.setMessage("亲，努力下载中。。。");
+                        progressDialog.setCancelable(false);//设置进度条是否可以按退回键取消
+                        progressDialog.setCanceledOnTouchOutside(false);//设置进度条是否可以按其他区域取消
+                        progressDialog.show();
+                    }
+
+                    @Override
+                    protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                        progressDialog.setMax(totalBytes/1024);
+                        progressDialog.setProgress(soFarBytes/1024);
+                    }
+
+                    @Override
+                    protected void completed(BaseDownloadTask task) {
+                        progressDialog.dismiss();
+                        File file= new File(updatePath);
+                        //参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致   参数3  共享的文件
+                        Uri apkUri =
+                                FileProvider.getUriForFile(MainActivity.this, "com.geniuses.newsclient.provider", file);
+
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        // 由于没有在Activity环境下启动Activity,设置下面的标签
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        //添加这一句表示对目标应用临时授权该Uri所代表的文件
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                        MainActivity.this.startActivity(intent);
+                    }
+
+                    @Override
+                    protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+
+                    }
+
+                    @Override
+                    protected void error(BaseDownloadTask task, Throwable e) {
+                        progressDialog.dismiss();
+                        Toast.makeText(MainActivity.this,"下载失败。",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    protected void warn(BaseDownloadTask task) {
+
+                    }
+                })
+                .start();
     }
 }

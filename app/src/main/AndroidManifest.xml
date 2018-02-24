@@ -6,6 +6,8 @@
     <!-- 添加快捷方式 -->
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 读写sdcard，storage等等 -->
+    <!-- 安装未知应用 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <application
         android:name=".NewsClientApplication"
         android:allowBackup="true"
@@ -46,6 +48,17 @@
         <activity android:name=".activity.WeatherInfoActivity"
             android:label="@string/weather_info_activity"
             />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.geniuses.newsclient.provider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
     </application>
 
 </manifest>

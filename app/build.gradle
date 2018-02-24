@@ -7,7 +7,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
-        versionName "1.1"
+        versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -36,7 +36,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.4'//下拉刷新
     compile 'com.zaaach:citypicker:1.2' //城市选择器
-    compile 'com.pgyersdk:sdk:2.8.1'//蒲公英
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar' //权限
     compile 'io.reactivex:rxjava:1.1.6' //需要引入RxJava
+
+    compile 'com.liulishuo.filedownloader:library:1.7.1'
 }
