@@ -8,8 +8,6 @@ import android.widget.Toast;
 
 import com.geniuses.newsclient.R;
 
-import org.xutils.common.util.LogUtil;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

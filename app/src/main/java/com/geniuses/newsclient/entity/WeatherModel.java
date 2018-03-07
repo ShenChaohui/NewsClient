@@ -1,7 +1,5 @@
 package com.geniuses.newsclient.entity;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 

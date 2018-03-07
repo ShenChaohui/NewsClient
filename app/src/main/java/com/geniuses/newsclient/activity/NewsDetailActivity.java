@@ -2,14 +2,11 @@ package com.geniuses.newsclient.activity;
 
 import android.content.Intent;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView;
 
 import com.geniuses.newsclient.R;
 import com.geniuses.newsclient.entity.NewsModel;
-import com.geniuses.newsclient.util.ImageUtils;
 
 /**
  * Created by Sch on 2017/12/1.

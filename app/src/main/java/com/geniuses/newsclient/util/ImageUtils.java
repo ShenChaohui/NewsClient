@@ -1,12 +1,10 @@
 package com.geniuses.newsclient.util;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import com.geniuses.newsclient.R;
 
-import org.xutils.common.Callback;
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
 

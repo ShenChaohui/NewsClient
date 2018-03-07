@@ -12,8 +12,6 @@ import com.geniuses.newsclient.entity.WeatherModel;
 import com.geniuses.newsclient.manager.GsonManager;
 import com.geniuses.newsclient.util.ImageUtils;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 
