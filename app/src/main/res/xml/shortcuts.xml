@@ -26,5 +26,17 @@
             android:targetClass="com.geniuses.newsclient.activity.ChatbotActivity" />
         <categories android:name="android.shortcut.conversation" />
     </shortcut>
-
+    <shortcut
+        android:shortcutId="gank"
+        android:enabled="true"
+        android:icon="@mipmap/ic_gank"
+        android:shortcutShortLabel="@string/gank_activity"
+        android:shortcutLongLabel="@string/gank_activity"
+        android:shortcutDisabledMessage="@string/gank_activity">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.geniuses.newsclient"
+            android:targetClass="com.geniuses.newsclient.activity.GankActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
 </shortcut>
