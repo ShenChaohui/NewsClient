@@ -55,6 +55,7 @@ public class GankListAdapter extends BaseAdapter {
             convertView = View.inflate(context, R.layout.item_gank, null);
             viewHolder.tv_desc = convertView.findViewById(R.id.tv_item_gank_desc);
             viewHolder.tv_createdAt = convertView.findViewById(R.id.tv_item_gank_creatAt);
+            viewHolder.tv_createdAt2 = convertView.findViewById(R.id.tv_item_gank_creatAt2);
             viewHolder.tv_who = convertView.findViewById(R.id.tv_item_gank_who);
             convertView.setTag(viewHolder);
         } else {
@@ -62,7 +63,8 @@ public class GankListAdapter extends BaseAdapter {
         }
         if (viewHolder != null) {
             viewHolder.tv_desc.setText(data.get(position).getDesc());
-            viewHolder.tv_createdAt.setText(data.get(position).getCreatedAt());
+            viewHolder.tv_createdAt.setText(data.get(position).getCreatedAt().split("T")[0]);
+            viewHolder.tv_createdAt2.setText(data.get(position).getCreatedAt().split("T")[1].split("Z")[0].split("\\.")[0]);
             viewHolder.tv_who.setText(data.get(position).getWho());
         }
         return convertView;
@@ -71,6 +73,7 @@ public class GankListAdapter extends BaseAdapter {
     class ViewHolder {
         TextView tv_desc;
         TextView tv_createdAt;
+        TextView tv_createdAt2;
         TextView tv_who;
     }
 }
