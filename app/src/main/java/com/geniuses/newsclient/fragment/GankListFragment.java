@@ -1,6 +1,7 @@
 package com.geniuses.newsclient.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,10 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.geniuses.newsclient.R;
+import com.geniuses.newsclient.activity.GankDetailActivity;
+import com.geniuses.newsclient.activity.NewsDetailActivity;
 import com.geniuses.newsclient.adapter.GankListAdapter;
 import com.geniuses.newsclient.entity.GankModel;
 import com.geniuses.newsclient.manager.GsonManager;
@@ -88,6 +92,14 @@ public class GankListFragment extends Fragment {
         data = new ArrayList<>();
         adapter = new GankListAdapter(getActivity(),data);
         mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), GankDetailActivity.class);
+                intent.putExtra("gankModel", data.get(position));
+                startActivity(intent);
+            }
+        });
         refreshLayout = view.findViewById(R.id.refreshLayout);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override

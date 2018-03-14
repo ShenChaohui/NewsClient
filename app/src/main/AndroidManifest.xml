@@ -52,6 +52,9 @@
             android:label="@string/weather_info_activity" />
         <activity android:name=".activity.GankActivity"
             android:label="@string/gank_activity"/>
+        <activity android:name=".activity.GankDetailActivity"
+            android:label="@string/gank_detail_activity"
+            />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

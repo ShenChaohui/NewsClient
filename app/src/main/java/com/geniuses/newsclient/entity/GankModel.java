@@ -1,12 +1,13 @@
 package com.geniuses.newsclient.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Sch on 2018/3/14.
  */
 
-public class GankModel {
+public class GankModel implements Serializable {
     /**
      * _id : 5a9cf1f5421aa9103fff20b1
      * createdAt : 2018-03-05T15:29:57.435Z
