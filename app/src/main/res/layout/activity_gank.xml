@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <include android:id="@+id/title_ganklist"
+        layout="@layout/app_bar_basic"/>
+    <android.support.v4.view.ViewPager
+        android:layout_below="@+id/title_ganklist"
+        android:id="@+id/vp_gank"
+        android:layout_width="wrap_content"
+        android:layout_marginBottom="56dp"
+        android:layout_height="wrap_content">
+    </android.support.v4.view.ViewPager>
+    <eu.long1.spacetablayout.SpaceTabLayout
+        android:id="@+id/st_gank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:number_of_tabs="three"
+        app:starting_position="one"
+        app:tab_color="@color/colorPrimary"
+        app:button_color="@color/colorAccent"
+        app:text_color="#61FFFFFF"
+        app:text_one="Android"
+        app:text_two="iOS"
+        app:text_three="前端"
+        app:icon_one="@mipmap/ic_android"
+        app:icon_two="@mipmap/ic_ios"
+        app:icon_three="@mipmap/ic_ie"
+        />
+</RelativeLayout>

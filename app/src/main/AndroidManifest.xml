@@ -50,6 +50,8 @@
         <activity
             android:name=".activity.WeatherInfoActivity"
             android:label="@string/weather_info_activity" />
+        <activity android:name=".activity.GankActivity"
+            android:label="@string/gank_activity"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

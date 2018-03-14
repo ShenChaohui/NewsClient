@@ -144,7 +144,10 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_chat) {
             startActivity(new Intent(MainActivity.this, ChatbotActivity.class));
+        }else if(id == R.id.nav_gank){
+            startActivity(new Intent(MainActivity.this,GankActivity.class));
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
