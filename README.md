@@ -1,5 +1,7 @@
-# NewsClient
+NewsClient
+=
 新闻客户端
+-
 调用万象数据新闻接口，部分新闻本身就没有图片。
 
 MD风格。
@@ -16,4 +18,4 @@ MD风格。
 
 增加干货功能
 
-下载地址 https://www.pgyer.com/dr7T
+[点我下载](https://www.pgyer.com/dr7T)
