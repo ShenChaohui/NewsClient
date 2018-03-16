@@ -1,6 +1,5 @@
 package com.geniuses.newsclient.fragment;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,11 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.geniuses.newsclient.R;
 import com.geniuses.newsclient.activity.GankDetailActivity;
-import com.geniuses.newsclient.activity.NewsDetailActivity;
 import com.geniuses.newsclient.adapter.GankListAdapter;
 import com.geniuses.newsclient.entity.GankModel;
 import com.geniuses.newsclient.manager.GsonManager;

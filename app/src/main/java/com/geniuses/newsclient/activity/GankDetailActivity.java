@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.BaseAdapter;
 
 import com.geniuses.newsclient.R;
 import com.geniuses.newsclient.entity.GankModel;
-import com.geniuses.newsclient.entity.NewsModel;
 
 /**
  * Created by Sch on 2018/3/14.

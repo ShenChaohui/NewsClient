@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity
     private TabLayout mTabLyout;
     private ViewPager mViewPager;
     private NewsListFragmentAdapter adapter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,7 +227,6 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    private ProgressDialog progressDialog;
 
     private void DownloadUpdateApp(String url, final String updatePath) {
         progressDialog = new ProgressDialog(this);
