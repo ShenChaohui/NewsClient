@@ -1,39 +1,35 @@
 package com.geniuses.newsclient.activity;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.FileProvider;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.geniuses.newsclient.entity.AppBean;
-import com.geniuses.newsclient.fragment.NewsListFragment;
 import com.geniuses.newsclient.R;
 import com.geniuses.newsclient.adapter.NewsListFragmentAdapter;
-import com.geniuses.newsclient.manager.GsonManager;
+import com.geniuses.newsclient.entity.AppBean;
+import com.geniuses.newsclient.fragment.NewsListFragment;
 import com.geniuses.newsclient.util.CommonUtils;
+import com.geniuses.newsclient.util.GsonUtil;
 import com.geniuses.newsclient.util.SharedPreferencesUtil;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
-import com.tbruyelle.rxpermissions.RxPermissions;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -42,8 +38,6 @@ import org.xutils.x;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -61,14 +55,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RxPermissions.getInstance(this)
-                // 申请权限
-                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .subscribe(new Action1<Boolean>() {
-                    @Override
-                    public void call(Boolean granted) {
-                    }
-                });
+        AndPermission.with(this).runtime().permission(Permission.Group.STORAGE).start();
         boolean isFirst = SharedPreferencesUtil.getBoolean(this, "isFirst", true);
         if (isFirst) {
             addShortcut();
@@ -112,27 +99,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -143,11 +109,12 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_weather) {
             startActivity(new Intent(MainActivity.this, WeatherListActivity.class));
 
-        } else if (id == R.id.nav_chat) {
-            startActivity(new Intent(MainActivity.this, ChatbotActivity.class));
-        }else if(id == R.id.nav_gank){
-            startActivity(new Intent(MainActivity.this,GankActivity.class));
+        } else if (id == R.id.nav_gank) {
+            startActivity(new Intent(MainActivity.this, GankActivity.class));
         }
+//        else if (id == R.id.nav_chat) {
+//            startActivity(new Intent(MainActivity.this, ChatbotActivity.class));
+//        }
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -188,7 +155,7 @@ public class MainActivity extends AppCompatActivity
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                final AppBean appBean = GsonManager.getGson().fromJson(result, AppBean.class);
+                final AppBean appBean = GsonUtil.parseJsonWithGson(result, AppBean.class);
                 final String updatePath = CommonUtils.getAppDirPath(MainActivity.this) + "/UpdateApk/掌上新闻" + appBean.getData().getBuildVersion() + ".apk";
                 if (Integer.valueOf(appBean.getData().getBuildVersionNo()) == Integer.valueOf(CommonUtils.getLocalVersion(MainActivity.this))) {
                     Log.e("update", "最新版本");
@@ -253,21 +220,22 @@ public class MainActivity extends AppCompatActivity
                     protected void completed(BaseDownloadTask task) {
                         progressDialog.dismiss();
                         File file = new File(updatePath);
-                        Uri apkUri;
-                        if (Build.VERSION.SDK_INT >= 25) {
-                            apkUri =
-                                    FileProvider.getUriForFile(MainActivity.this, "com.geniuses.newsclient.provider", file);
-                        } else {
-                            apkUri = Uri.parse("file://" + updatePath);
-                        }
-
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        // 由于没有在Activity环境下启动Activity,设置下面的标签
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        //添加这一句表示对目标应用临时授权该Uri所代表的文件
-                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-                        MainActivity.this.startActivity(intent);
+                        AndPermission.with(MainActivity.this).install().file(file).start();
+//                        Uri apkUri;
+//                        if (Build.VERSION.SDK_INT >= 25) {
+//                            apkUri =
+//                                    FileProvider.getUriForFile(MainActivity.this, "com.geniuses.newsclient.provider", file);
+//                        } else {
+//                            apkUri = Uri.parse("file://" + updatePath);
+//                        }
+//
+//                        Intent intent = new Intent(Intent.ACTION_VIEW);
+//                        // 由于没有在Activity环境下启动Activity,设置下面的标签
+//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        //添加这一句表示对目标应用临时授权该Uri所代表的文件
+//                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                        intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+//                        MainActivity.this.startActivity(intent);
                     }
 
                     @Override

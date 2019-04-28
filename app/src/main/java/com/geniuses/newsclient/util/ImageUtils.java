@@ -13,12 +13,8 @@ import java.util.Calendar;
 public class ImageUtils {
     private static ImageOptions imageOptions = new ImageOptions.Builder()
             .setFadeIn(true)
-//            .setCircular(true) //设置图片显示为圆形
             .setLoadingDrawableId(R.mipmap.loading)
-            .setSquare(true) //设置图片显示为正方形
-//            .setCrop(true).setSize(200, 200) //设置大小
-            .setIgnoreGif(true) //忽略Gif图片
-            .setRadius(20)//拐角弧度
+            .setIgnoreGif(false) //忽略Gif图片
             .setUseMemCache(true) //设置使用MemCache，默认true
             .build();
 

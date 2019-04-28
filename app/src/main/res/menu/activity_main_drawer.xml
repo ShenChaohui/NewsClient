@@ -11,12 +11,12 @@
         android:id="@+id/nav_gank"
         android:icon="@mipmap/ic_gank"
         android:title="干货" />
-    <item android:title="实验室">
-        <menu>
-            <item
-                android:id="@+id/nav_chat"
-                android:icon="@mipmap/ic_chat"
-                android:title="一个智障" />
-        </menu>
-    </item>
+    <!--<item android:title="实验室">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_chat"-->
+                <!--android:icon="@mipmap/ic_chat"-->
+                <!--android:title="一个智障" />-->
+        <!--</menu>-->
+    <!--</item>-->
 </menu>

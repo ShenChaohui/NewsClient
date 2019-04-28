@@ -17,7 +17,7 @@ import com.geniuses.newsclient.R;
 import com.geniuses.newsclient.activity.GankDetailActivity;
 import com.geniuses.newsclient.adapter.GankListAdapter;
 import com.geniuses.newsclient.entity.GankModel;
-import com.geniuses.newsclient.manager.GsonManager;
+import com.geniuses.newsclient.util.GsonUtil;
 import com.mingle.widget.LoadingView;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -30,6 +30,7 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -59,11 +60,11 @@ public class GankListFragment extends Fragment {
                     mLoadingView.setVisibility(View.GONE);
                     refreshLayout.finishLoadmore();
                     refreshLayout.finishRefresh();
-                    Log.e(type,"成功");
+                    Log.e(type, "成功");
                     break;
                 case ERROR:
                     mLoadingView.setVisibility(View.GONE);
-                    Log.e(type,"失败");
+                    Log.e(type, "失败");
                     break;
                 case CANCELLED:
                     mLoadingView.setVisibility(View.GONE);
@@ -71,6 +72,7 @@ public class GankListFragment extends Fragment {
             }
         }
     };
+
     public static GankListFragment newInstance(int index) {
         Bundle bundle = new Bundle();
         bundle.putInt("index", index);
@@ -87,7 +89,7 @@ public class GankListFragment extends Fragment {
         mLoadingView = view.findViewById(R.id.loadView);
         mListView = view.findViewById(R.id.lv_ganklist);
         data = new ArrayList<>();
-        adapter = new GankListAdapter(getActivity(),data);
+        adapter = new GankListAdapter(getActivity(), data);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -113,6 +115,7 @@ public class GankListFragment extends Fragment {
         getGank();
         return view;
     }
+
     private void refreshNews() {
         count = 1;
         getGank();
@@ -122,8 +125,12 @@ public class GankListFragment extends Fragment {
         count++;
         getGank();
     }
+
     public void getGank() {
-        String url = "http://gank.io/api/data/"+type+"/10/"+ count;
+        if (type.equals("前端")) {
+            type = URLEncoder.encode(type);
+        }
+        String url = "http://gank.io/api/data/" + type + "/10/" + count;
         RequestParams params = new RequestParams(url);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
@@ -131,10 +138,8 @@ public class GankListFragment extends Fragment {
                 try {
                     JSONObject object = new JSONObject(result);
                     JSONArray results = object.getJSONArray("results");
-                    for(int i = 0;i<results.length();i++){
-                        GankModel gankModel = GsonManager.getGson().fromJson(results.get(i).toString(),GankModel.class);
-                        data.add(gankModel);
-                    }
+                    ArrayList<GankModel> gankModels = (ArrayList<GankModel>) GsonUtil.parseJsonArrayWithGson(results.toString(), GankModel.class);
+                    data.addAll(gankModels);
                     Message msg = new Message();
                     msg.what = SUCCESS;
                     handler.sendMessage(msg);

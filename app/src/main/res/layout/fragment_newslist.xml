@@ -14,8 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
-            android:id="@+id/lv_newslist"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_newslist"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>

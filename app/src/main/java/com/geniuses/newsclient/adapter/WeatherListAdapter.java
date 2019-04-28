@@ -6,10 +6,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.geniuses.newsclient.R;
 import com.geniuses.newsclient.entity.WeatherInfo;
 import com.geniuses.newsclient.entity.WeatherModel;
-import com.geniuses.newsclient.manager.GsonManager;
+import com.geniuses.newsclient.util.GsonUtil;
 import com.geniuses.newsclient.util.ImageUtils;
 
 import java.util.ArrayList;
@@ -27,7 +28,8 @@ public class WeatherListAdapter extends BaseAdapter {
         this.mData = mData;
         this.context = context;
     }
-    public void updateData(ArrayList<WeatherModel> data){
+
+    public void updateData(ArrayList<WeatherModel> data) {
         this.mData = data;
         notifyDataSetChanged();
     }
@@ -64,11 +66,11 @@ public class WeatherListAdapter extends BaseAdapter {
         if (viewHolder != null) {
             WeatherModel weatherModel = mData.get(position);
             String weatherJson = weatherModel.getWeatherJson();
-            WeatherInfo weatherInfo = GsonManager.getGson().fromJson(weatherJson,WeatherInfo.class);
-            if(weatherInfo != null){
+            WeatherInfo weatherInfo = GsonUtil.parseJsonWithGson(weatherJson, WeatherInfo.class);
+            if (weatherInfo != null) {
                 viewHolder.tvCityName.setText(weatherModel.getCityName());
                 viewHolder.tvTemp.setText(context.getString(R.string.tempC, weatherInfo.getNow().getTmp()));
-                viewHolder.ivWeatherIcon.setImageResource(ImageUtils.getIconByCode(context,weatherInfo.getNow().getCond().getCode()));
+                viewHolder.ivWeatherIcon.setImageResource(ImageUtils.getIconByCode(context, weatherInfo.getNow().getCond().getCode()));
             }
         }
         return convertView;

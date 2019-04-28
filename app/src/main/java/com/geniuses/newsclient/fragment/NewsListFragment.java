@@ -6,19 +6,20 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.geniuses.newsclient.R;
 import com.geniuses.newsclient.activity.NewsDetailActivity;
-import com.geniuses.newsclient.adapter.NewsListAdapter;
+import com.geniuses.newsclient.adapter.NewsRecyclerViewAdapter;
 import com.geniuses.newsclient.entity.NewsModel;
-import com.geniuses.newsclient.manager.GsonManager;
 import com.geniuses.newsclient.util.GlobalValue;
+import com.geniuses.newsclient.util.GsonUtil;
 import com.mingle.widget.LoadingView;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -38,9 +39,9 @@ public class NewsListFragment extends Fragment {
     private final int ERROR = 0X02;
     private final int CANCELLED = 0x03;
     private String TAG;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private String types[] = {"头条", "新闻", "财经", "体育", "娱乐", "军事", "教育", "科技", "NBA", "股票", "星座", "女性", "健康", "育儿"};
-    private NewsListAdapter adapter;
+    private NewsRecyclerViewAdapter adapter;
     private ArrayList<NewsModel> data;
     private LoadingView mLoadingView;
     private RefreshLayout refreshLayout;
@@ -51,7 +52,7 @@ public class NewsListFragment extends Fragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case SUCCESS:
-                    adapter.notifyDataSetChanged(data);
+                    adapter.notifyDataSetChanged();
                     mLoadingView.setVisibility(View.GONE);
                     refreshLayout.finishLoadmore();
                     refreshLayout.finishRefresh();
@@ -82,20 +83,25 @@ public class NewsListFragment extends Fragment {
         TAG = types[getArguments().getInt("index")];
         mLoadingView = view.findViewById(R.id.loadView);
         data = new ArrayList<>();
-        adapter = new NewsListAdapter(getActivity(), data);
-        mListView = view.findViewById(R.id.lv_newslist);
-        mListView.setAdapter(adapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        adapter = new NewsRecyclerViewAdapter(getActivity(), data);
+        mRecyclerView = view.findViewById(R.id.rv_newslist);
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+        mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(adapter);
+        adapter.setOnRecyclerItemClickListener(new NewsRecyclerViewAdapter.OnRecyclerItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(View view, int position) {
+                NewsModel newsModel = data.get(position);
                 Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-                intent.putExtra("newsModel", data.get(position));
+                intent.putExtra("newsModel", newsModel);
                 startActivity(intent);
             }
         });
-
         start = 0;
         getNewsData();
+
         mLoadingView.setVisibility(View.VISIBLE);
         refreshLayout = view.findViewById(R.id.refreshLayout);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -133,10 +139,8 @@ public class NewsListFragment extends Fragment {
                         JSONObject obj01 = obj.getJSONObject("result");
                         JSONObject obj02 = obj01.getJSONObject("result");
                         JSONArray array = obj02.getJSONArray("list");
-                        for (int i = 0; i < array.length(); i++) {
-                            NewsModel newsModel = GsonManager.getGson().fromJson(array.get(i).toString(), NewsModel.class);
-                            data.add(newsModel);
-                        }
+                        ArrayList<NewsModel> newsModels = (ArrayList<NewsModel>) GsonUtil.parseJsonArrayWithGson(array.toString(), NewsModel.class);
+                        data.addAll(newsModels);
                         Message msg = new Message();
                         msg.what = SUCCESS;
                         handler.sendMessage(msg);

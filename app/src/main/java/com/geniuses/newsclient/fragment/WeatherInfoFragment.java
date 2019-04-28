@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.geniuses.newsclient.R;
 import com.geniuses.newsclient.activity.WeatherInfoActivity;
 import com.geniuses.newsclient.adapter.DailyForecastAdapter;
@@ -21,8 +22,9 @@ import com.geniuses.newsclient.adapter.HourlyForecastAdapter;
 import com.geniuses.newsclient.adapter.SuggestionAdapter;
 import com.geniuses.newsclient.entity.WeatherInfo;
 import com.geniuses.newsclient.entity.WeatherModel;
-import com.geniuses.newsclient.manager.GsonManager;
+import com.geniuses.newsclient.util.GsonUtil;
 import com.geniuses.newsclient.util.ImageUtils;
+
 import java.util.ArrayList;
 
 /**
@@ -62,7 +64,7 @@ public class WeatherInfoFragment extends Fragment {
         WeatherInfoActivity activity = (WeatherInfoActivity) getActivity();
         mData = activity.getWeatherModelList();
         WeatherModel weatherModel = mData.get(getArguments().getInt("index"));
-        weatherInfo = GsonManager.getGson().fromJson(weatherModel.getWeatherJson(),WeatherInfo.class);
+        weatherInfo = GsonUtil.parseJsonWithGson(weatherModel.getWeatherJson(), WeatherInfo.class);
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +88,7 @@ public class WeatherInfoFragment extends Fragment {
         lvSuggestion = view.findViewById(R.id.slv_weather_info_suggestion);
 
         ivWeatherImage.setImageResource(ImageUtils.getWeatherImage(weatherInfo.getNow().getCond().getTxt()));
-        ivWeatherIcon.setImageResource(ImageUtils.getIconByCode(getActivity(),weatherInfo.getNow().getCond().getCode()));
+        ivWeatherIcon.setImageResource(ImageUtils.getIconByCode(getActivity(), weatherInfo.getNow().getCond().getCode()));
         tvTemp.setText(getString(R.string.tempC, weatherInfo.getNow().getTmp()));
         tvMaxTemp.setText(getString(R.string.now_max_temp, weatherInfo.getDaily_forecast().get(0).getTmp().getMax()));
         tvMinTemp.setText(getString(R.string.now_min_temp, weatherInfo.getDaily_forecast().get(0).getTmp().getMax()));
